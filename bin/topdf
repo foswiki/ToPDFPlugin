@@ -31,9 +31,9 @@ BEGIN {
 }
 
 use strict;
-use Foswiki::Contrib::ToPDFAddon;
+use Foswiki::Contrib::ToPDFPlugin;
 
 use Foswiki::UI;
-Foswiki::UI::run( \&Foswiki::Contrib::ToPDFAddon::viewPDF );
+Foswiki::UI::run( \&Foswiki::Contrib::ToPDFPlugin::viewPDF );
 
 
