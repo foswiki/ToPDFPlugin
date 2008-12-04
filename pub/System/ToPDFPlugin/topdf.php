@@ -1,6 +1,6 @@
 <?php
-    //$foswikiConfigPath = "../../../lib";
-    $foswikiConfigPath = "/var/www/www.collaborganize.de/core/lib";
+    $foswikiConfigPath = "../../../lib";
+    //$foswikiConfigPath = "/var/www/www.collaborganize.de/core/lib";
     $foswikiConfig = file_get_contents("$foswikiConfigPath/LocalSite.cfg");
 
     preg_match_all('/\$Foswiki::cfg\{Plugins\}\{ToPDFPlugin\}\{([^\}]+)\}\s=\s[\']?([^\';]+)[\']?;/', $foswikiConfig, $tmp, PREG_SET_ORDER);
