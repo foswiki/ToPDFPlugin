@@ -34,7 +34,7 @@ outside the package.
 
 =cut
 
-package Foswiki::ToPDFPlugin::ToPDFPlugin;
+package Foswiki::Plugins::ToPDFPlugin;
 
 use strict;
 
@@ -48,6 +48,7 @@ use Error qw( :try );
 use URI::Escape;
 use Encode;
 use Encode::Encoding;
+use HTML::TreeBuilder;
 #use utf8;
 
 use vars qw( $VERSION $RELEASE $SHORTDESCRIPTION $debug $pluginName $NO_PREFS_IN_TOPIC );
@@ -60,7 +61,7 @@ our %prefs;
 
 # $VERSION is referred to by Foswiki, and is the only global variable that
 # *must* exist in this package.
-
+use HTML::Parser;
 
 # This should always be $Rev$ so that Foswiki can determine the checked-in
 # status of the plugin. It is used by the build automation tools, so
@@ -70,7 +71,7 @@ $VERSION = '$Rev$';
 # This is a free-form string you can use to "name" your own plugin version.
 # It is *not* used by the build automation tools, but is reported as part
 # of the version number in PLUGINDESCRIPTIONS.
-$RELEASE = 'Foswiki-1.0';
+$RELEASE = '02 December 2008';
 
 # Short description of this plugin
 # One line description, is shown in the %SYSTEMWEB%.TextFormattingRules topic:
@@ -125,11 +126,16 @@ sub initPlugin {
 
     # check for Plugins.pm versions
     if( $Foswiki::Plugins::VERSION < 1.026 ) {
-        Foswiki::Func::writeWarning( "Version mismatch between $pluginName and Plugins.pm" );
+        Foswiki::Func::writeWarning( "Version mismatch between $pluginName and Plugins.pm" );        
         return 0;
     }
-
+    Foswiki::Func::registerRESTHandler('convert', \&toPDF);
     return 1;
+}
+
+sub test {
+	die("here");
+	
 }
 
 sub _getRenderedView {
@@ -168,51 +174,49 @@ isn't present. Returns the modified html.
 
 sub _fixHtml {
    my ($html, $topic, $webName, $refTopics) = @_;
-   my $title = Foswiki::Func::expandCommonVariables($prefs{'title'}, $topic, $webName);
-   $title = Foswiki::Func::renderText($title);
-   $title =~ s/<.*?>//gs;
-
+   my $docroot = Foswiki::Func::getPubDir();
+   $docroot =~ s/^(.*)\/pub/$1/sg;
+   my $urlhost = Foswiki::Func::getUrlHost();
+   
+   #replace all @import urls with  <link href=""> with absolute pathes, to fetch them all locally
+   while($html =~ s/(<style)([^<>]*)(>)([^<>]?)(\s*)(\@import url\(['|"])(\/[^']+)(['|"]\);)(.*)/<link rel="stylesheet"$2 href="$docroot$7">\n$1$2$3$9/gi){};
+   
+   my $tree = HTML::TreeBuilder->new_from_content($html);
+   # replace all occurences of urlhost with the full local path to fetch them locally
+   foreach my $e ($tree->look_down(_tag => "img", src => qr|^$urlhost|)) {
+        my $tmp = $e->attr("src");
+        $tmp =~ s/^$urlhost/$docroot/;   
+        $e->attr("src",$tmp);
+   }
+   # all pathes are relative to docroot should get expanded to absolute paths for the local-fetcher
+   $_->attr("src",$docroot . $_->attr("src")) for $tree->look_down(_tag => "img", src => qr|^(?!$docroot)|);
+   
+   $_->delete() for $tree->look_down(_tag => "script");
+   $_->delete() for $tree->look_down(_tag => "meta");
+   $_->delete() for $tree->look_down(_tag => "link", rel => qr|^(?!stylesheet)|);   
+   
+   $html = $tree->as_HTML("","\t");
+    
    # remove <nop> tags
    $html =~ s/<nop>//g;
    #remove TOC links, as they are represented as a linebreak
    $html =~ s/<a name="(.*?)"><\/a>//g;
    #remove toc links
    $html =~ s/<a href="#toc" class="tocLink">&uarr;<\/a>//g;
-
+   # remove doctype
+   $html =~ s/<!DOCTYPE[^>]*>//gsi;
+   
+   # 
+   
+   
+   
    # remove all page breaks
    # FIXME - why remove a forced page break? Instead insert a <!-- PAGE BREAK -->
    #         otherwise dangling </p> is not cleaned up
    $html =~ s/(<p(.*) style="page-break-before:always")/\n<!-- PAGE BREAK -->\n<p$1/gis;
 
-   # remove %META stuff
+   # remove %META stuff   
    $html =~ s/%META:\w+{.*?}%//gs;
-
-   # Prepend META tags for PDF meta info - may be redefined later by topic text
-   my $meta = '<META NAME="AUTHOR" CONTENT="%REVINFO{format="$wikiusername"}%"/>'; # Specifies the document author.
-   $meta .= '<META NAME="COPYRIGHT" CONTENT="%WEBCOPYRIGHT%"/>'; # Specifies the document copyright.
-   $meta .= '<META NAME="DOCNUMBER" CONTENT="%REVINFO{format="r1.$rev - $date"}%"/>'; # Specifies the document number.
-   $meta .= '<META NAME="GENERATOR" CONTENT="%WIKITOOLNAME% %WIKIVERSION%"/>'; # Specifies the application that generated the HTML file.
-   # TODO: subject and keywords should be taken from ?! Maybe take web, topic as keywords
-   #$meta .= '<META NAME="KEYWORDS" CONTENT="'. $prefs{'keywords'} .'"/>'; # Specifies document search keywords.
-   $meta .= '<META NAME="SUBJECT" CONTENT="$topic"/>'; # Specifies document subject.
-   $meta = Foswiki::Func::expandCommonVariables($meta, $topic, $webName);
-   $meta =~ s/<(?!META).*?>//g; # remove any tags from inside the <META />
-   $meta = Foswiki::Func::renderText($meta);
-   $meta =~ s/<(?!META).*?>//g; # remove any tags from inside the <META />
-   # FIXME - renderText converts the <META> tags to &lt;META&gt;
-   # if the CONTENT contains anchor tags (trying to be XHTML compliant)
-   $meta =~ s/&lt;/</g;
-   $meta =~ s/&gt;/>/g;
-
-   # SMELL: Shouldn`t this be up to the user, if he wants h1 or not?
-   # Insert an <h1> header if one isn't present
-   # and a target (after the <h1>) for this topic so it gets a bookmark
-   #if ($html !~ /<h1>/is) {
-   #   $html = "<h1>$topic</h1><a name=\"$topic\"> </a>$html";
-   #} else {
-   #   $html = "<a name=\"$topic\"> </a>$html";
-   #}
-   $html = "<head><title>$title</title>\n$meta</head>\n<body>$html</body>";
 
    # As of HtmlDoc 1.8.24, it only handles HTML3.2 elements so
    # convert some common HTML4.x elements to similar HTML3.2 elements
@@ -232,10 +236,6 @@ sub _fixHtml {
    my $pdir = Foswiki::Func::getPubDir();
    my $purlp = Foswiki::Func::getPubUrlPath();
 
-   $html =~ s!<img(.*?) src="($url)?$purlp!<img$1 src="$pdir!sgi;
-   # url encoding string, as we use them as local paths and that would e..g fail for umluats
-   $html =~ s!<img(.*?) src="(.*?)"!"<img$1 src=\"".uri_unescape($2).'"'!esgi;
-   $html =~ s/<a(.*?) href="\//<a$1 href="$url\//sgi;
    # link internally if we include the topic
    for my $wikiword (@$refTopics) {
       $url = Foswiki::Func::getScriptUrl($webName, $wikiword, 'view');
@@ -250,17 +250,17 @@ sub _fixHtml {
    return $html;
 }
 
-=pod
+=podheader
 
-=head2 viewPDF
+=head2 toPDF
 
 This is the core method to convert the current page into PDF format.
 
 =cut
 
-sub viewPDF {
+sub toPDF {
+
    my $session = shift;
-   die "here we go";
    # using Foswiki::UI so i have a sessin object. There had been some issues with the user / caller of the script and
    # with the old implementation. But there have also been thoughts of the Foswiki::UI way being to "heavy" for this puporse
    # SMELL: maybe Foswiki::UI should not be used. RestHandler is an option
@@ -273,7 +273,7 @@ sub viewPDF {
    # Initialize Foswiki
    my $topic = $session->{topicName};
    my $webName = $session->{webName};
-   my $userName = $session->{user}->wikiName();
+   my $userName = Foswiki::Func::getWikiName();
    my $theUrl = $query->url;
 
    # Check for existence
@@ -309,8 +309,9 @@ sub viewPDF {
    my $utf8userName = encode("utf8",$userName);
    my $headerFile = _getHeaderFile();
    my $footerFile = _getFooterFile();
-   my $Cmd = "/usr/bin/php $pubDir/System/ToPDFPlugin/topdf.php $inputFile $outputFilename $outputDir \"$utf8webName/$utf8topic\" \"$utf8userName\" \"$headerFile\" \"$footerFile\"";
+   my $Cmd = "/usr/bin/php $pubDir/System/ToPDFPlugin/topdf.php \"$inputFile\" \"$outputFilename\" \"$outputDir\" \"$utf8webName/$utf8topic\" \"$utf8userName\" \"$headerFile\" \"$footerFile\"";
    
+
    # actually run the converting command
    system($Cmd);
    if ($? == -1) {
@@ -327,7 +328,8 @@ sub viewPDF {
 
    #  output the HTML header and the output of HTMLDOC
    my $cd = "filename=${webName}_$topic.";
-   print CGI::header( -TYPE => 'application/pdf',-Content_Disposition => $cd.'pdf');   
+   print CGI::header( -TYPE => 'application/pdf',-Content_Disposition => $cd.'pdf');
+   
    open my $ofh, '<', $finalPDF or die "I cannot open $finalPDF for reading, cap'n: $!";
    while(<$ofh>){
       print;
@@ -337,6 +339,9 @@ sub viewPDF {
    # Cleaning up temporary files
    unlink $finalPDF;
    unlink @topicHTMLfiles;
+   unlink $headerFile;
+   unlink $footerFile;
+   return;
 }
 
 sub _renderTopic {
@@ -348,7 +353,8 @@ sub _renderTopic {
    $htmlData = _fixHtml($htmlData, $topic, $webName);
 
    # The data returned also includes the header. Remove it.
-   $htmlData =~ s|.*(<!DOCTYPE)|$1|s;
+   #$htmlData =~ s|.*(<!DOCTYPE)|$1|s;
+   #$htmlData =~ s|.*(import)|$1|s;
    return $htmlData;
 }
 
@@ -361,6 +367,7 @@ sub _renderTopics {
 
      # Save this to a temp file for converting by command line
      my ($cfh, $newFile) = tempfile('html2pdfXXXX',
+     
                           DIR => "/tmp",
                           UNLINK => 0, # DEBUG
                           SUFFIX => '.html');
@@ -373,28 +380,43 @@ sub _renderTopics {
 }
 
 sub _getHeaderFile {
+	
     my($session) = @_; 
     my ($cfh, $path ) = tempfile('html2pdfHeaderXXXX',
                           DIR => "/tmp",
                           UNLINK => 0,
                           SUFFIX => '.html');
-   my $topicAsHTML = _renderTopic($session,"System","ToPDFPluginHeader");
+   my $topicAsHTML = _renderTopicContentOnly("System","ToPDFPluginHeader");
    print $cfh $topicAsHTML; 
    close($cfh);
    return $path;
 }
 
-sub _getFooterFile {
+sub _getFooterFile {	
     my($session) = @_; 
     my ($cfh, $path ) = tempfile('html2pdfFooterXXXX',
                           DIR => "/tmp",
                           UNLINK => 0,
                           SUFFIX => '.html');
-   my $topicAsHTML = _renderTopic($session,"System","ToPDFPluginFooter");
+   my $topicAsHTML = _renderTopicContentOnly("System","ToPDFPluginFooter");  
    print $cfh $topicAsHTML; 
    close($cfh);
    return $path;
 }
 
+sub _renderTopicContentOnly {
+   my ($webName, $topic) = @_;
+	# Read topic data.
+   my ($meta, $text) = Foswiki::Func::readTopic( $webName, $topic );
+  
+   $text =~ s/\%TOC({.*?})?\%//g; # remove Foswiki TOC
+   #Expand and render the topic text
+   $text = Foswiki::Func::expandCommonVariables(
+                    $text, $topic, $webName, $meta);
+   
+   $text = Foswiki::Func::renderText($text);
+   $text =~ s/<nop>//g;
+   return $text;	
+}
 1;
 # vim:et:sw=3:ts=3:tw=0

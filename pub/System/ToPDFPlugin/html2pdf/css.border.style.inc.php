@@ -30,9 +30,9 @@ class CSSBorderStyle extends CSSSubProperty {
   }
 
   function get_value(&$owner_value) {
-    return new BorderStyle($owner_value->top->style, 
-                           $owner_value->right->style, 
-                           $owner_value->bottom->style, 
+    return new BorderStyle($owner_value->top->style,
+                           $owner_value->right->style,
+                           $owner_value->bottom->style,
                            $owner_value->left->style);
   }
 
@@ -45,29 +45,30 @@ class CSSBorderStyle extends CSSSubProperty {
   }
 
   function default_value() {
-    return $this->_defaultValue;
+    // return $this->_defaultValue;
+    return array(BS_NONE,BS_NONE,BS_NONE,BS_NONE);
   }
 
   function parse_style($value) {
     switch ($value) {
-    case "solid":  
-      return BS_SOLID; 
-    case "dashed": 
-      return BS_DASHED; 
-    case "dotted": 
-      return BS_DOTTED; 
-    case "double": 
-      return BS_DOUBLE; 
-    case "inset":  
-      return BS_INSET; 
-    case "outset": 
-      return BS_OUTSET; 
-    case "groove": 
-      return BS_GROOVE; 
-    case "ridge":  
-      return BS_RIDGE; 
-    default:       
-      return BS_NONE; 
+    case "solid":
+      return BS_SOLID;
+    case "dashed":
+      return BS_DASHED;
+    case "dotted":
+      return BS_DOTTED;
+    case "double":
+      return BS_DOUBLE;
+    case "inset":
+      return BS_INSET;
+    case "outset":
+      return BS_OUTSET;
+    case "groove":
+      return BS_GROOVE;
+    case "ridge":
+      return BS_RIDGE;
+    default:
+      return BS_NONE;
     };
   }
 
@@ -95,7 +96,7 @@ class CSSBorderStyle extends CSSSubProperty {
       return array($v1, $v2, $v3, $v4);
     default:
       return $this->default_value();
-    };   
+    };
   }
 
   function parse($value) {
@@ -105,10 +106,11 @@ class CSSBorderStyle extends CSSSubProperty {
 
     $values = $this->parse_in($value);
 
-    return new BorderStyle($values[0], 
+    return new BorderStyle($values[0],
                            $values[1],
                            $values[2],
                            $values[3]);
+
   }
 }
 

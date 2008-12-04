@@ -51,7 +51,7 @@ define('PDFLIB_DL_PATH','pdflib.so');
 
 // Path to directory containing fonts used by PDFLIB / FPDF
 // Trailing backslash required
-define('TTF_FONTS_REPOSITORY',HTML2PS_DIR."fonts/");
+define('TTF_FONTS_REPOSITORY',$_CONFIG['TffFontsPath']);
 
 // Determines how font files are embedded. May be:
 // 'all' - embed all fonts

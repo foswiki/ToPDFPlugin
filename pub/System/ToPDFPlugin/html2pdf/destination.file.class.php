@@ -15,7 +15,7 @@ class DestinationFile extends Destination {
     else {
     	$dest_filename = $this->_dest_path.$this->filename_escape($this->get_filename()).".".$content_type->default_extension;
     }
-   print "dest : $dest_filename\n\r";
+
     copy($tmp_filename, $dest_filename);
 
     $text = $this->_link_text;

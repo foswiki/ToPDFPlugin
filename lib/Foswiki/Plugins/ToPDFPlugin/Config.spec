@@ -14,6 +14,10 @@ $Foswiki::cfg{Plugins}{ToPDFPlugin}{GhostscriptPath} = "/usr/bin/gs";
 # path to your fonts reporsitory
 $Foswiki::cfg{Plugins}{ToPDFPlugin}{FontsPath} = "/usr/share/fonts/default/ghostscript/";
 
+## **STRING**
+# path to your ttf fonts  reporsitory
+$Foswiki::cfg{Plugins}{ToPDFPlugin}{TffFontsPath} = '/usr/share/fonts/truetype/msttcorefonts/';
+
 
 # **STRING**
 # what is the URL of the page. Important! Its needed to define what can be fetched

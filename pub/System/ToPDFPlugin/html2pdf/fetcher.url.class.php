@@ -131,8 +131,8 @@ class FetcherUrl extends Fetcher {
     $fp = @fsockopen($this->host,$this->port,$errno,$errstr,HTML2PS_CONNECTION_TIMEOUT);
 
     if (!$fp) {
-      $message = sprintf("Cannot connect to %s:%d - (%d) %s", 
-                         $this->host, 
+      $message = sprintf("Cannot connect to %s:%d - (%d) %s",
+                         $this->host,
                          $this->port,
                          $errno,
                          $errstr);
@@ -146,15 +146,15 @@ class FetcherUrl extends Fetcher {
 
   function _connect_ssl() {
     /**
-     * Check if there's SSL support library loaded 
-     * 
+     * Check if there's SSL support library loaded
+     *
      * Note that in certain situations (e.g. Windows + PHP 4.4.0 + Apache 2 on my development box)
      * openssl extension IS present, but fsockopen still complains "No SSL support in this build".
-     * (probably PHP bug?) 
+     * (probably PHP bug?)
      */
     if (!extension_loaded('openssl')) {
-      $message = sprintf("Cannot connect to %s:%d. SSL Extension missing", 
-                         $this->host, 
+      $message = sprintf("Cannot connect to %s:%d. SSL Extension missing",
+                         $this->host,
                          $this->port);
       error_log($message);
       $this->error_message .= $message;
@@ -164,8 +164,8 @@ class FetcherUrl extends Fetcher {
     $fp = @fsockopen("ssl://$this->host", $this->port, $errno, $errstr, 5);
 
     if (!$fp) {
-      $message = sprintf("Cannot connect to %s:%d - (%d) %s<br/>Missing SSL support?", 
-                         $this->host, 
+      $message = sprintf("Cannot connect to %s:%d - (%d) %s<br/>Missing SSL support?",
+                         $this->host,
                          $this->port,
                          $errno,
                          $errstr);
@@ -207,7 +207,7 @@ class FetcherUrl extends Fetcher {
   function fetch($url) {
     /**
      * Handle empty $url value; unfortunaltely, parse_url will treat empty value as valid
-     * URL, so fetcher will attempt to fetch something from the localhost instead of 
+     * URL, so fetcher will attempt to fetch something from the localhost instead of
      * passing control to subsequent user-defined fetchers (which probably will know
      * how to handle this).
      */
@@ -220,8 +220,8 @@ class FetcherUrl extends Fetcher {
     $parts = @parse_url($this->url);
 
     /**
-     * If an malformed URL have been specified, add a message to the log file and 
-     * continue processing (as such URLs may be found in otherwise good HTML file - 
+     * If an malformed URL have been specified, add a message to the log file and
+     * continue processing (as such URLs may be found in otherwise good HTML file -
      * for example, invalid image or CSS reference)
      */
     if ($parts == false) {
@@ -231,12 +231,12 @@ class FetcherUrl extends Fetcher {
       $this->code = HTTP_OK;
       return true;
     };
-   
+
     /**
      * Setup default values
      */
     $this->protocol = 'http';
-    $this->host = 'info.gds1.de';
+    $this->host = 'localhost';
     $this->user = "";
     $this->pass = "";
     $this->port = 80;
@@ -250,7 +250,7 @@ class FetcherUrl extends Fetcher {
     if (isset($parts['port']))     { $this->port      = $parts['port'];      };
     if (isset($parts['path']))     { $this->path      = $parts['path'];      } else { $this->path = "/"; };
     if (isset($parts['query']))    { $this->path     .= '?'.$parts['query']; };
-  
+
     switch (strtolower($this->protocol)) {
     case 'http':
       return $this->fetch_http();
@@ -326,7 +326,7 @@ class FetcherUrl extends Fetcher {
     $header .= "Accept: */*\r\n";
     $header .= "User-Agent: ".$this->user_agent."\r\n";
     $header .= "Connection: keep-alive\r\n";
-    $header .= "Referer: ".$this->protocol."://".$this->host.$this->path."\r\n";   
+    $header .= "Referer: ".$this->protocol."://".$this->host.$this->path."\r\n";
     $header .= $this->_header_basic_authorization();
     $header .= "\r\n";
 
@@ -396,8 +396,8 @@ class FetcherUrl extends Fetcher {
 
       /**
        * @todo add error processing here
-       * 
-       * Note: file_get_contents is smart enough to use basic authorization headers provided 
+       *
+       * Note: file_get_contents is smart enough to use basic authorization headers provided
        * user name / password are given in the URL.
        */
       $this->content = @file_get_contents($this->url);

@@ -1,9 +1,9 @@
 <?php
-    $foswikiConfigPath = "../../../lib";
-    //$foswikiConfigPath = "/var/www/www.collaborganize.de/core/lib";
+    //$foswikiConfigPath = "../../../lib";
+    $foswikiConfigPath = "/var/www/www.collaborganize.de/core/lib";
     $foswikiConfig = file_get_contents("$foswikiConfigPath/LocalSite.cfg");
 
-    preg_match_all('/\$Foswiki::cfg\{Plugins\}\{ToPDFPlugin\}\{([^\}]+)\}=["]?([^";]+)["]?;/', $foswikiConfig, $tmp, PREG_SET_ORDER);
+    preg_match_all('/\$Foswiki::cfg\{Plugins\}\{ToPDFPlugin\}\{([^\}]+)\}\s=\s[\']?([^\';]+)[\']?;/', $foswikiConfig, $tmp, PREG_SET_ORDER);
     $_CONFIG = array();
     foreach($tmp as $value) {
         $_CONFIG[$value[1]] = $value[2];
@@ -44,7 +44,7 @@
 				'landscape' => false
 				);
 
-
+    ob_start();
 	$g_media = Media::predefined($g_config['media']);
 	$g_media->set_pixels($g_config['pagewidth']);
 	$g_media->set_margins(array(	'left' =>10,
@@ -63,17 +63,16 @@
 
 	// for fetching the css files
 	require_once(HTML2PS_DIR.'fetcher.local.class.php');
-	#$pipeline->fetchers[] = new FetcherLocalfile("");
-	$pipeline->fetchers[] = new FetcherLocalfile($sourcefn);
+    $pipeline->fetchers[] = new FetcherLocalfile($sourcefn);
 
-	require_once(HTML2PS_DIR.'fetcher.url.curl.class.php');
-	$pipeline->fetchers[] = new FetcherUrlCurl();
+	//require_once(HTML2PS_DIR.'fetcher.url.curl.class.php');
+	//$pipeline->fetchers[] = new FetcherUrlCurl();
 	#toc!
 	if($_CONFIG['CreateTOC'])
         $pipeline->add_feature('toc', array('location', 'before'));
 
     $header_html = file_get_contents($headerFile);
-    $footer_html =file_get_contents($footerFile);
+    $footer_html = file_get_contents($footerFile);
 	$pipeline->pre_tree_filters = array();
 	if( $header_html != '' || $footer_html != '') {
 		$filter = new PreTreeFilterHeaderFooter($header_html, $footer_html);
@@ -89,6 +88,7 @@
 	$pipeline->post_tree_filters = array();
 	$pipeline->layout_engine = new LayoutEngineDefault;
 	$pipeline->output_driver = new OutputDriverFPDF();
-	$pipeline->destination = new DestinationFile($destfn,"",$outputdir);
+    $pipeline->destination = new DestinationFile($destfn,"",$outputdir);
 	$pipeline->process($sourcefn,$g_media);
+    ob_end_clean();
 ?>
