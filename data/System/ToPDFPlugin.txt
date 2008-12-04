@@ -6,7 +6,7 @@ The plugin fetches all data ( pictures, css ..) on file-system base and save a l
 
 This Plugin was based on !GenPDF
 
-*This plugin is currently not able to display patter-skin topics correctly*
+*This plugin is currently not able to display patter-skin topics correctly. See !ToDo/Bug section below*
 
 %TOC%
 
@@ -41,7 +41,7 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
 | !BaseUrl | foswiki.org |  what is the URL of the page. Important! Its needed to define what can be fetched locally and what is remote |
 | !GhostscriptPath | /usr/bin/gs | path to Ghostscript |
 | !FontsPath | /usr/share/fonts/default/ghostscript/ | path to your fonts reporsitory |
-| !PrintTemplate | patter | template to use for rendering the topic with, before creating the PDF |
+| !PrintTemplate | pattern | template to use for rendering the topic with, before creating the PDF |
 | !RenderImages | 1 | render and show images |
 | !RenderForms | 0 | render forms |
 | !RenderLinks | 1 | render links and make them clickable  |
@@ -56,8 +56,9 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
       * open view/System/%TOPIC% and click this [[%SCRIPTURLPATH%/rest/ToPDFPlugin/convert/?topic=%WEB%.%TOPIC%&t=%GMTIME{"$epoch"}%][link]] and hopefully you get a PDF of the ToPDFPlugin topic. 
 
 
----++ ToDo / Bugs
-   *  images included in CSS files with relative paths are not shown
+---++ !ToDo / Bugs
+   * images included in CSS files with relative paths are not shown
+   * problems with "focus" on links, painting the whole page in one color ( like pattern skin )
 ---++ Plugin Info
 
    * Set SHORTDESCRIPTION = Converts topics ( TML ) into PDF
@@ -65,13 +66,13 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
 |  Plugin Author: | Foswiki:Main.MayerEugen |
 |  Copyright: | &copy; 2006, Impressive.media |
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
-|  Plugin Version: | 04 Dez 2008 (V0.2) |
+|  Plugin Version: | 04 Dez 2008 (V1.2) |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
-|  04 Dez 2008: | Fixed all bugs with Foswiki. All data is fetched locally now. Working footer and header |
+|  04 Dez 2008: | Fixed all bugs with Foswiki, also using restHandler now, instead of  /bin/topdf. All data is fetched locally now. Working footer and header |
 |  01 Dez 2008: | Ported to Foswiki and made for auto-build. Simplified configuration a lot and added new configuration abilities like template, renderForms, renderImages. Everything availble thorugh configure script now. Header and Footer are Foswiki-Topics now. Fixed some bugs with images and encoding. |
 |  01 Jun 2008: | Initial version |
 |  Foswiki Dependency: |  |
-|  CPAN Dependencies: | HTTP::Cookies::Find,Encode,Encode::Encoding,File::Basename,URI::Escape |
+|  CPAN Dependencies: | HTTP::Cookies::Find,Encode,Encode::Encoding,File::Basename,URI::Escape,HTML::TreeBuilder |
 |  Other Dependencies: | htmltopdf(included in the package) |
 |  Perl Version: | 5.005 |
 |  Add-on Home: | http://foswiki.org/Extensions/%TOPIC% |
@@ -80,4 +81,4 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
 
 __Related Topic:__ 
 
--- Foswiki:Main/MayerEugen - 01 Jun 2008
+-- Foswiki:Main/MayerEugen - 04 Dez 2008

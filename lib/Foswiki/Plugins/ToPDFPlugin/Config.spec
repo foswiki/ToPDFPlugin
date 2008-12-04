@@ -1,4 +1,4 @@
-# ---+ ToPDF Settings
+fo# ---+ ToPDF Settings
 # This is the configuration used by the <b>ToPDFPlugin</b> and the
 # <h2>Environment</h2>
 
