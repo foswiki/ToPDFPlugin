@@ -21,7 +21,7 @@
 
 =head1 Foswiki::Plugins::ToPDFPlugin
 
-TWiki::Plugins::ToPDFPlugin - Displays Foswiki topics as PDF using html2pdf
+FosWiki::Plugins::ToPDFPlugin - Displays Foswiki topics as PDF using html2pdf
 
 =head1 DESCRIPTION
 
