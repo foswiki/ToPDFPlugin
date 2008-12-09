@@ -133,11 +133,6 @@ sub initPlugin {
     return 1;
 }
 
-sub test {
-	die("here");
-	
-}
-
 sub _getRenderedView {
    my ($webName, $topic) = @_;
    
