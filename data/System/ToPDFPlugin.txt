@@ -82,3 +82,10 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
 __Related Topic:__ 
 
 -- Foswiki:Main/MayerEugen - 04 Dez 2008
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="TopicClassification" attributes="" title="TopicClassification" value="PluginPackage"}%
+%META:FIELD{name="Compatibility" attributes="" title="[[Compatibility]]" value=""}%
+%META:FIELD{name="DemoUrl" attributes="" title="DemoUrl" value="http://"}%
+%META:FIELD{name="DevelopedInSVN" attributes="" title="DevelopedInSVN" value="Yes"}%
+%META:FIELD{name="ModificationPolicy" attributes="" title="ModificationPolicy" value="PleaseFeelFreeToModify"}%
