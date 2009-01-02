@@ -66,8 +66,9 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
 |  Plugin Author: | Foswiki:Main.MayerEugen |
 |  Copyright: | &copy; 2006, Impressive.media |
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
-|  Plugin Version: | 04 Dez 2008 (V1.2) |
+|  Plugin Version: | 02 Jan 2009 (V1.3) |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  02 Jan 2009: | Fixed all bugs with Foswiki, also using restHandler now, instead of  /bin/topdf. All data is fetched locally now. Working footer and header |
 |  04 Dez 2008: | Fixed all bugs with Foswiki, also using restHandler now, instead of  /bin/topdf. All data is fetched locally now. Working footer and header |
 |  01 Dez 2008: | Ported to Foswiki and made for auto-build. Simplified configuration a lot and added new configuration abilities like template, renderForms, renderImages. Everything availble thorugh configure script now. Header and Footer are Foswiki-Topics now. Fixed some bugs with images and encoding. |
 |  01 Jun 2008: | Initial version |
