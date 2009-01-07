@@ -130,6 +130,7 @@ sub initPlugin {
         return 0;
     }
     Foswiki::Func::registerRESTHandler('convert', \&toPDF);
+    Foswiki::Func::registerTagHandler("TOPDFBUTTON",\&_showButton);
     return 1;
 }
 
@@ -332,10 +333,10 @@ sub toPDF {
    close $ofh;
 
    # Cleaning up temporary files
-   unlink $finalPDF;
-   unlink @topicHTMLfiles;
-   unlink $headerFile;
-   unlink $footerFile;
+   #unlink $finalPDF;
+   #unlink @topicHTMLfiles;
+   #unlink $headerFile;
+   #unlink $footerFile;
    return;
 }
 
@@ -412,6 +413,18 @@ sub _renderTopicContentOnly {
    $text = Foswiki::Func::renderText($text);
    $text =~ s/<nop>//g;
    return $text;	
+}
+
+sub _showButton {
+	my ( $this, $params, $topic, $web ) = @_;
+    $web   = $params->{'web'}   || $web;
+    $topic = $params->{'topic'} || $topic;
+    my $label = $params->{'label'} || 'PDF';
+    
+	my $button = "";
+	$button = Foswiki::Func::getScriptUrlPath()."/rest/ToPDFPlugin/convert/?topic=$web.$topic".'&t=%GMTIME{"$epoch"}%';
+	$button = "<a href='$button'>$label</a>";
+	return $button;	
 }
 1;
 # vim:et:sw=3:ts=3:tw=0

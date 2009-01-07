@@ -31,9 +31,7 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
    * tba
    
 ---+++ Installation instructions
-   * Download the ZIP file from the Add-on Home (see below)
-   * Install all dependecies
-   * Unzip ==%TOPIC%.zip== in your twiki installation directory.
+   * Use the Extension-Center to install the plugin
    * Configuration  
       * Use the Foswiki configure script to define
 | *Option* | *Default* | *Description* |
@@ -50,10 +48,13 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
 | !DateFormat | "d.m.y" | date format to use when filling in header/footer |
 | !CreateTOC | 0 | Create TOC ( not the toc of Foswiki ) |
       * Customize [[ToPDFPluginHeader]] and [[ToPDFPluginFooter]] for using your footers and headers
-      * Add the PDF button to your viewtopicactions.skin.tmpl ( or somewhere else )
-         * <verbatim>%SCRIPTURLPATH%/rest/ToPDFPlugin/convert/?topic=%WEB%.%TOPIC%&t=%GMTIME{"$epoch"}%</verbatim>
+      * Add the PDF button to your viewtopicactions.skin.tmpl ( or somewhere else ) by using the macro : =%TOPDFBUTTON%= which would be shown as %TOPDFBUTTON%
+| *Option* | *Default* | *Description* |
+| web | current web | web, where the topic is located, which should get converted |
+| topic | current topic | topic to be converted |
+| label | PDF |how should the button be named |
    * Test if the installation was successful:
-      * open view/System/%TOPIC% and click this [[%SCRIPTURLPATH%/rest/ToPDFPlugin/convert/?topic=%WEB%.%TOPIC%&t=%GMTIME{"$epoch"}%][link]] and hopefully you get a PDF of the ToPDFPlugin topic. 
+      * open view/System/%TOPIC% and click this %TOPDFBUTTON% and hopefully you get a PDF of the ToPDFPlugin topic. 
 
 
 ---++ !ToDo / Bugs
@@ -68,9 +69,9 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
 |  Plugin Version: | 02 Jan 2009 (V1.3) |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
-|  02 Jan 2009: | Fixed all bugs with Foswiki, also using restHandler now, instead of  /bin/topdf. All data is fetched locally now. Working footer and header |
-|  04 Dez 2008: | Fixed all bugs with Foswiki, also using restHandler now, instead of  /bin/topdf. All data is fetched locally now. Working footer and header |
-|  01 Dez 2008: | Ported to Foswiki and made for auto-build. Simplified configuration a lot and added new configuration abilities like template, renderForms, renderImages. Everything availble thorugh configure script now. Header and Footer are Foswiki-Topics now. Fixed some bugs with images and encoding. |
+|  07 Jan 2009: | * Fixed the Manifest which has skipping the pub/System/ToPDFPlugin folder %BR% * Added Macro for the button|
+|  04 Dez 2008: | Fixed all bugs with Foswiki, also using restHandler now, instead of  /bin/topdf. %BR% All data is fetched locally now. Working footer and header |
+|  01 Dez 2008: | Ported to Foswiki and made for auto-build. Simplified configuration a lot and added %BR% new configuration abilities like template, renderForms, renderImages.%BR% Everything availble thorugh configure script now. Header and Footer are Foswiki-Topics now. Fixed some bugs with images and encoding. |
 |  01 Jun 2008: | Initial version |
 |  Foswiki Dependency: |  |
 |  CPAN Dependencies: | HTTP::Cookies::Find,Encode,Encode::Encoding,File::Basename,URI::Escape,HTML::TreeBuilder |
