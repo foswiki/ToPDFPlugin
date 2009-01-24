@@ -34,6 +34,7 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
    * Use the Extension-Center to install the plugin
    * Configuration  
       * Use the Foswiki configure script to define
+   * *Attention*: Right now the pub/System/ToPDFPlugin/html2pdf/topdf.php needs to be customized for each install. you must enter the absolute path to the lib/ directory there.
 | *Option* | *Default* | *Description* |
 | !DefaultEncoding | iso-8859-1 | normaly your Foswiki encoding |
 | !BaseUrl | foswiki.org |  what is the URL of the page. Important! Its needed to define what can be fetched locally and what is remote |
@@ -61,14 +62,15 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
    * images included in CSS files with relative paths are not shown
    * problems with "focus" on links, painting the whole page in one color ( like pattern skin )
 ---++ Plugin Info
-
+<!--
    * Set SHORTDESCRIPTION = Converts topics ( TML ) into PDF
-
+-->
 |  Plugin Author: | Foswiki:Main.MayerEugen |
 |  Copyright: | &copy; 2006, Impressive.media |
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
-|  Plugin Version: | 02 Jan 2009 (V1.3) |
+|  Plugin Version: | 24 Jan 2009 (V1.4) |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  24 Jan 2009: | MANIFEST fixed. Right now the pub/System/ToPDFPlugin/html2pdf/topdf.php needs to be customized for each install. |
 |  07 Jan 2009: | * Fixed the Manifest which has skipping the pub/System/ToPDFPlugin folder %BR% * Added Macro for the button|
 |  04 Dez 2008: | Fixed all bugs with Foswiki, also using restHandler now, instead of  /bin/topdf. %BR% All data is fetched locally now. Working footer and header |
 |  01 Dez 2008: | Ported to Foswiki and made for auto-build. Simplified configuration a lot and added %BR% new configuration abilities like template, renderForms, renderImages.%BR% Everything availble thorugh configure script now. Header and Footer are Foswiki-Topics now. Fixed some bugs with images and encoding. |

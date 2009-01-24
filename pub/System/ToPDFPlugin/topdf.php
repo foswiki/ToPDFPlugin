@@ -1,6 +1,7 @@
 <?php
-    $foswikiConfigPath = "../../../lib";
-    //$foswikiConfigPath = "/var/www/www.collaborganize.de/core/lib";
+    // TODO_ right now this must be a abolute path to the lib, as this relative approach fails.
+    // Attention: Set this to the absolute path of your lib, e.g /var/www/foswiki/lib
+    $foswikiConfigPath = "/var/www/foswiki/lib";
     $foswikiConfig = file_get_contents("$foswikiConfigPath/LocalSite.cfg");
 
     preg_match_all('/\$Foswiki::cfg\{Plugins\}\{ToPDFPlugin\}\{([^\}]+)\}\s=\s[\']?([^\';]+)[\']?;/', $foswikiConfig, $tmp, PREG_SET_ORDER);
