@@ -31,7 +31,7 @@ define('GS_PATH',$_CONFIG['GhostscriptPath']);
 // NOTE: Trailing backslash required
 // define('TYPE1_FONTS_REPOSITORY', "c:\\Program Files\\gs\\fonts\\");
 // define('TYPE1_FONTS_REPOSITORY',"/usr/share/ghostscript/fonts/");
-define('TYPE1_FONTS_REPOSITORY', $_CONFIG['FontsReporsitory']);
+define('TYPE1_FONTS_REPOSITORY', $_CONFIG['FontsReporsitory']."/");
 
 /**
  * PDFLIB-specific configuration options
@@ -51,7 +51,7 @@ define('PDFLIB_DL_PATH','pdflib.so');
 
 // Path to directory containing fonts used by PDFLIB / FPDF
 // Trailing backslash required
-define('TTF_FONTS_REPOSITORY',$_CONFIG['TffFontsPath']);
+define('TTF_FONTS_REPOSITORY',$_CONFIG['TffFontsPath']."/");
 
 // Determines how font files are embedded. May be:
 // 'all' - embed all fonts

@@ -71,7 +71,7 @@ $VERSION = '$Rev$';
 # This is a free-form string you can use to "name" your own plugin version.
 # It is *not* used by the build automation tools, but is reported as part
 # of the version number in PLUGINDESCRIPTIONS.
-$RELEASE = '24 Jan 2009 (1.4)';
+$RELEASE = '25 Jan 2009 (1.5)';
 
 # Short description of this plugin
 # One line description, is shown in the %SYSTEMWEB%.TextFormattingRules topic:
@@ -333,10 +333,10 @@ sub toPDF {
    close $ofh;
 
    # Cleaning up temporary files
-   #unlink $finalPDF;
-   #unlink @topicHTMLfiles;
-   #unlink $headerFile;
-   #unlink $footerFile;
+   unlink $finalPDF;
+   unlink @topicHTMLfiles;
+   unlink $headerFile;
+   unlink $footerFile;
    return;
 }
 

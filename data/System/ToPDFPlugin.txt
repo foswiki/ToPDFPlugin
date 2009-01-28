@@ -1,6 +1,6 @@
+%META:TOPICINFO{author="EugenMayer" date="1233151161" format="1.1" reprev="1.2" version="1.2"}%
 ---+ !ToPDF Plugin
-This plugin converts Foswiki topics into PDF`s. Comparing to !GenPDF or others, its main goal yet is to support CSS as far as possible and therefore the PDF should just look like the original topic.
-In addition it supports to render the topic in a diffrrent template before generating the PDF to customize the topic, remove anything not needed or just adjust the "printing" view for papers.
+ This plugin converts Foswiki topics into PDF`s. Comparing to !GenPDF or others, its main goal yet is to support CSS as far as possible and therefore the PDF should just look like the original topic. In addition it supports to render the topic in a diffrrent template before generating the PDF to customize the topic, remove anything not needed or just adjust the "printing" view for papers.
 
 The plugin fetches all data ( pictures, css ..) on file-system base and save a lot of webserver-load now.
 
@@ -15,26 +15,36 @@ This Plugin was based on !GenPDF
 
 ---++ Plugin Installation Instructions
 
-__Note:__ You do not need to install anything on the browser to use this Plugin. The following instructions are for the administrator who installs the Plugin on the server where Foswiki is running. 
+__Note:__ You do not need to install anything on the browser to use this Plugin. The following instructions are for the administrator who installs the Plugin on the server where Foswiki is running.
 
 ---+++ Dependecies( Tested with linux, should work under windows too)
 ---++++ Linux
    * PHP5 as client modes, so for the use in the command line
    * Ghostscript-GPL ( worked with 8.61, please add other versions here, if you tested it )
-   * pdflib ( worked with 7.0.2, please add other versions here, if you have tested it )
-*optional*
+
 ---+++++ Optional
-   * gnu-gs-fonts-std:  Ghostscript Standard Fonts
+   * gnu-gs-fonts-std: Ghostscript Standard Fonts
    * gnu-gs-fonts-other: Ghostscript Extra Fonts
    * Microsoft fonts: you might want install the Microsoft fonts, you can follow this readme http://corefonts.sourceforge.net/
 ---++++ Windows
    * tba
-   
+
 ---+++ Installation instructions
+---+++++ Debian Dependencies Installation
+ <verbatim>
+apt-get install gs-gpl gs-fonts php5-cli cabextracter
+</verbatim> 
+%BR% Now the Truetypes fonts mostly needed <verbatim>
+wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_2.7_all.deb
+
+dpkg -i ttf-mscorefonts-installer*.deb
+</verbatim> Now set the values throught configure:%BR% ={Plugins}{ToPDFPlugin}{FontsPath} = /usr/share/fonts/type1/gsfonts/= %BR% ={Plugins}{ToPDFPlugin}{TffFontsPath} = /usr/share/fonts/truetype/msttcorefonts= %BR% 
+%BR% No you should have all dependencies generally needed
+
+---+++++ General Plugin installation
    * Use the Extension-Center to install the plugin
-   * Configuration  
-      * Use the Foswiki configure script to define
    * *Attention*: Right now the pub/System/ToPDFPlugin/html2pdf/topdf.php needs to be customized for each install. you must enter the absolute path to the lib/ directory there.
+   * Use the Foswiki configure script to define%BR%
 | *Option* | *Default* | *Description* |
 | !DefaultEncoding | iso-8859-1 | normaly your Foswiki encoding |
 | !BaseUrl | foswiki.org |  what is the URL of the page. Important! Its needed to define what can be fetched locally and what is remote |
@@ -48,34 +58,36 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
 | !MediaType | "A4" | Media format |
 | !DateFormat | "d.m.y" | date format to use when filling in header/footer |
 | !CreateTOC | 0 | Create TOC ( not the toc of Foswiki ) |
-      * Customize [[ToPDFPluginHeader]] and [[ToPDFPluginFooter]] for using your footers and headers
-      * Add the PDF button to your viewtopicactions.skin.tmpl ( or somewhere else ) by using the macro : =%TOPDFBUTTON%= which would be shown as %TOPDFBUTTON%
+%BR%
+   * Customize [[ToPDFPluginHeader]] and [[ToPDFPluginFooter]] for using your footers and headers
+   * Add the PDF button to your viewtopicactions.skin.tmpl ( or somewhere else ) by using the macro : %TOPDFBUTTON% which would be shown as %TOPDFBUTTON%
+%BR%
 | *Option* | *Default* | *Description* |
 | web | current web | web, where the topic is located, which should get converted |
 | topic | current topic | topic to be converted |
-| label | PDF |how should the button be named |
-   * Test if the installation was successful:
-      * open view/System/%TOPIC% and click this %TOPDFBUTTON% and hopefully you get a PDF of the ToPDFPlugin topic. 
-
+| label | PDF | how should the button be named  |
+   * Test if the installation was successful: 
+      * open view/System/%TOPIC% and click this %TOPDFBUTTON% and hopefully you get a PDF of the ToPDFPlugin topic.
 
 ---++ !ToDo / Bugs
    * images included in CSS files with relative paths are not shown
    * problems with "focus" on links, painting the whole page in one color ( like pattern skin )
 ---++ Plugin Info
-<!--
+ <!--
    * Set SHORTDESCRIPTION = Converts topics ( TML ) into PDF
--->
+--> 
 |  Plugin Author: | Foswiki:Main.MayerEugen |
-|  Copyright: | &copy; 2006, Impressive.media |
+|  Copyright: | © 2009, Collaborganize ( www.collaborganize.com ) |
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
-|  Plugin Version: | 24 Jan 2009 (V1.4) |
-|  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  Plugin Version: | 28 Jan 2009 (V1.5) |
+|  Change History: | <!-- versions below in reverse order --> |
+|  28 Jan 2009: | Fixed some path errors, updated deps docs and added a Debian howto |
 |  24 Jan 2009: | MANIFEST fixed. Right now the pub/System/ToPDFPlugin/html2pdf/topdf.php needs to be customized for each install. |
-|  07 Jan 2009: | * Fixed the Manifest which has skipping the pub/System/ToPDFPlugin folder %BR% * Added Macro for the button|
-|  04 Dez 2008: | Fixed all bugs with Foswiki, also using restHandler now, instead of  /bin/topdf. %BR% All data is fetched locally now. Working footer and header |
+|  07 Jan 2009: | * Fixed the Manifest which has skipping the pub/System/ToPDFPlugin folder %BR% * Added Macro for the button |
+|  04 Dez 2008: | Fixed all bugs with Foswiki, also using restHandler now, instead of /bin/topdf. %BR% All data is fetched locally now. Working footer and header |
 |  01 Dez 2008: | Ported to Foswiki and made for auto-build. Simplified configuration a lot and added %BR% new configuration abilities like template, renderForms, renderImages.%BR% Everything availble thorugh configure script now. Header and Footer are Foswiki-Topics now. Fixed some bugs with images and encoding. |
 |  01 Jun 2008: | Initial version |
-|  Foswiki Dependency: |  |
+|  Foswiki Dependency: | |
 |  CPAN Dependencies: | HTTP::Cookies::Find,Encode,Encode::Encoding,File::Basename,URI::Escape,HTML::TreeBuilder |
 |  Other Dependencies: | htmltopdf(included in the package) |
 |  Perl Version: | 5.005 |
@@ -83,13 +95,13 @@ __Note:__ You do not need to install anything on the browser to use this Plugin.
 |  Feedback: | http://foswiki.org/Extensions/%TOPIC%Dev |
 |  Appraisal: | http://foswiki.org/Extensions/%TOPIC%Appraisal |
 
-__Related Topic:__ 
+__Related Topic:__
 
--- Foswiki:Main/MayerEugen - 04 Dez 2008
+-- Foswiki:Main/MayerEugen - 28 Jan 2009
 
 %META:FORM{name="PackageForm"}%
 %META:FIELD{name="TopicClassification" attributes="" title="TopicClassification" value="PluginPackage"}%
 %META:FIELD{name="Compatibility" attributes="" title="[[Compatibility]]" value=""}%
 %META:FIELD{name="DemoUrl" attributes="" title="DemoUrl" value="http://"}%
 %META:FIELD{name="DevelopedInSVN" attributes="" title="DevelopedInSVN" value="Yes"}%
-%META:FIELD{name="ModificationPolicy" attributes="" title="ModificationPolicy" value="PleaseFeelFreeToModify"}%
+%META:FIELD{name="ModificationPolicy" attributes="" title="ModificationPolicy" value="ContactAutorFirst"}%
