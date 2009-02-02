@@ -71,7 +71,7 @@ $VERSION = '$Rev$';
 # This is a free-form string you can use to "name" your own plugin version.
 # It is *not* used by the build automation tools, but is reported as part
 # of the version number in PLUGINDESCRIPTIONS.
-$RELEASE = '25 Jan 2009 (1.5)';
+$RELEASE = '(1.6)';
 
 # Short description of this plugin
 # One line description, is shown in the %SYSTEMWEB%.TextFormattingRules topic:
@@ -89,37 +89,6 @@ $NO_PREFS_IN_TOPIC = 1;
 # Name of this Plugin, only used in this module
 $pluginName = 'ToPDFPlugin';
 
-=begin TML
-
----++ initPlugin($topic, $web, $user, $installWeb) -> $boolean
-   * =$topic= - the name of the topic in the current CGI query
-   * =$web= - the name of the web in the current CGI query
-   * =$user= - the login name of the user
-   * =$installWeb= - the name of the web the plugin is installed in
-
-REQUIRED
-
-Called to initialise the plugin. If everything is OK, should return
-a non-zero value. On non-fatal failure, should write a message
-using Foswiki::Func::writeWarning and return 0. In this case
-%<nop>FAILEDPLUGINS% will indicate which plugins failed.
-
-In the case of a catastrophic failure that will prevent the whole
-installation from working safely, this handler may use 'die', which
-will be trapped and reported in the browser.
-
-You may also call =Foswiki::Func::registerTagHandler= here to register
-a function to handle variables that have standard Foswiki syntax - for example,
-=%<nop>MYTAG{"my param" myarg="My Arg"}%. You can also override internal
-Foswiki variable handling functions this way, though this practice is unsupported
-and highly dangerous!
-
-__Note:__ Please align variables names with the Plugin name, e.g. if 
-your Plugin is called FooBarPlugin, name variables FOOBAR and/or 
-FOOBARSOMETHING. This avoids namespace issues.
-
-
-=cut
 
 sub initPlugin {
     my( $topic, $web, $user, $installWeb ) = @_;
@@ -131,6 +100,7 @@ sub initPlugin {
     }
     Foswiki::Func::registerRESTHandler('convert', \&toPDF);
     Foswiki::Func::registerTagHandler("TOPDFBUTTON",\&_showButton);
+    Foswiki::Func::registerTagHandler("TOPDFBUTTONLINK",\&_getButtonLinkOnly);
     return 1;
 }
 
@@ -422,9 +392,17 @@ sub _showButton {
     my $label = $params->{'label'} || 'PDF';
     
 	my $button = "";
-	$button = Foswiki::Func::getScriptUrlPath()."/rest/ToPDFPlugin/convert/?topic=$web.$topic".'&t=%GMTIME{"$epoch"}%';
+	$button = _getButtonLinkOnly();
 	$button = "<a href='$button'>$label</a>";
 	return $button;	
+}
+
+sub _getButtonLinkOnly {
+    my ( $this, $params, $topic, $web ) = @_;
+    $web   = $params->{'web'}   || $web;
+    $topic = $params->{'topic'} || $topic;
+
+    return Foswiki::Func::getScriptUrlPath()."/rest/ToPDFPlugin/convert/?topic=$web.$topic".'&t=%GMTIME{"$epoch"}%';
 }
 1;
 # vim:et:sw=3:ts=3:tw=0

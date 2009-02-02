@@ -60,7 +60,7 @@ dpkg -i ttf-mscorefonts-installer*.deb
 | !CreateTOC | 0 | Create TOC ( not the toc of Foswiki ) |
 %BR%
    * Customize [[ToPDFPluginHeader]] and [[ToPDFPluginFooter]] for using your footers and headers
-   * Add the PDF button to your viewtopicactions.skin.tmpl ( or somewhere else ) by using the macro : %TOPDFBUTTON% which would be shown as %TOPDFBUTTON%
+   * Add the PDF button to your viewtopicactions.skin.tmpl ( or somewhere else ) by using the macro : =%TOPDFBUTTON%= which would be shown as %TOPDFBUTTON%
 %BR%
 | *Option* | *Default* | *Description* |
 | web | current web | web, where the topic is located, which should get converted |
@@ -68,7 +68,8 @@ dpkg -i ttf-mscorefonts-installer*.deb
 | label | PDF | how should the button be named  |
    * Test if the installation was successful: 
       * open view/System/%TOPIC% and click this %TOPDFBUTTON% and hopefully you get a PDF of the ToPDFPlugin topic.
-
+%BR%
+you can also use the macro *TOPDFBUTTONLINK* which just returns the link-destination.
 ---++ !ToDo / Bugs
    * images included in CSS files with relative paths are not shown
    * problems with "focus" on links, painting the whole page in one color ( like pattern skin )
@@ -77,10 +78,11 @@ dpkg -i ttf-mscorefonts-installer*.deb
    * Set SHORTDESCRIPTION = Converts topics ( TML ) into PDF
 --> 
 |  Plugin Author: | Foswiki:Main.MayerEugen |
-|  Copyright: | © 2009, Collaborganize ( www.collaborganize.com ) |
+|  Copyright: | &copy; 2009, Collaborganize [[www.collaborganize.com]] |
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
-|  Plugin Version: | 28 Jan 2009 (V1.5) |
+|  Plugin Version: | 31 Jan 2009 (V1.6) |
 |  Change History: | <!-- versions below in reverse order --> |
+|  31 Jan 2009: | Added TOPDFBUTTONLINK which just returns the link. Mostly needed when skinning |
 |  28 Jan 2009: | Fixed some path errors, updated deps docs and added a Debian howto |
 |  24 Jan 2009: | MANIFEST fixed. Right now the pub/System/ToPDFPlugin/html2pdf/topdf.php needs to be customized for each install. |
 |  07 Jan 2009: | * Fixed the Manifest which has skipping the pub/System/ToPDFPlugin folder %BR% * Added Macro for the button |
@@ -100,8 +102,9 @@ __Related Topic:__
 -- Foswiki:Main/MayerEugen - 28 Jan 2009
 
 %META:FORM{name="PackageForm"}%
-%META:FIELD{name="TopicClassification" attributes="" title="TopicClassification" value="PluginPackage"}%
+%META:FIELD{name="ExtensionClassification" attributes="" title="ExtensionClassification" value="Import and Export"}%
+%META:FIELD{name="ExtensionType" attributes="" title="ExtensionType" value="PluginPackage"}%
 %META:FIELD{name="Compatibility" attributes="" title="[[Compatibility]]" value=""}%
 %META:FIELD{name="DemoUrl" attributes="" title="DemoUrl" value="http://"}%
 %META:FIELD{name="DevelopedInSVN" attributes="" title="DevelopedInSVN" value="Yes"}%
-%META:FIELD{name="ModificationPolicy" attributes="" title="ModificationPolicy" value="ContactAutorFirst"}%
+%META:FIELD{name="ModificationPolicy" attributes="" title="ModificationPolicy" value="PleaseFeelFreeToModify"}%
