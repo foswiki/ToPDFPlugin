@@ -29,7 +29,7 @@ $Foswiki::cfg{Plugins}{ToPDFPlugin}{BaseUrl} = "foswiki.org";
 $Foswiki::cfg{Plugins}{ToPDFPlugin}{PrintTemplate} = "pattern";
 
 # **BOOLEAN**
-# Create a tobel of contents
+# Create the tabel of contents
 $Foswiki::cfg{Plugins}{ToPDFPlugin}{CreateTOC} = 0;
 
 # **BOOLEAN**

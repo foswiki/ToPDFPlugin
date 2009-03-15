@@ -75,7 +75,7 @@ $RELEASE = '(1.6)';
 
 # Short description of this plugin
 # One line description, is shown in the %SYSTEMWEB%.TextFormattingRules topic:
-$SHORTDESCRIPTION = 'Displays Foswiki topics as PDF using html2pdf';
+$SHORTDESCRIPTION = 'Exports Foswiki topics as PDF using html2pdf';
 
 # You must set $NO_PREFS_IN_TOPIC to 0 if you want your plugin to use preferences
 # stored in the plugin topic. This default is required for compatibility with
@@ -225,7 +225,6 @@ This is the core method to convert the current page into PDF format.
 =cut
 
 sub toPDF {
-
    my $session = shift;
    # using Foswiki::UI so i have a sessin object. There had been some issues with the user / caller of the script and
    # with the old implementation. But there have also been thoughts of the Foswiki::UI way being to "heavy" for this puporse
